@@ -18,6 +18,8 @@ const trustedOrigins = Array.from(
     "https://127.0.0.1:3000",
     "http://localhost:3001",
     "https://localhost:3001",
+    "https://taptaptogo.vercel.app",
+    "https://taptogo-1iagzblam-topjuan-tech.vercel.app",
   ]),
 );
 
