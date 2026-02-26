@@ -1,5 +1,5 @@
-import { TransitSimulator } from "@/components/transit-simulator";
+import { AuthGate } from "@/components/auth-gate";
 
 export default function Page() {
-  return <TransitSimulator />;
+  return <AuthGate />;
 }
