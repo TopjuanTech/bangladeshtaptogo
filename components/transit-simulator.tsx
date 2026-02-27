@@ -77,6 +77,18 @@ export function TransitSimulator() {
   const updateCard = useCardRegistryStore((state) => state.updateCard);
   const isRegistered = useCardRegistryStore((state) => state.isRegistered);
   const getCard = useCardRegistryStore((state) => state.getCard);
+  const buyTicket = useCardRegistryStore((state) => state.buyTicket);
+  const sellTickets = useCardRegistryStore((state) => state.sellTickets);
+  const getTransactionsForUid = useCardRegistryStore(
+    (state) => state.getTransactionsForUid,
+  );
+
+  const [ticketQuantity, setTicketQuantity] = React.useState("1");
+  const transactions = useCardRegistryStore((s) => s.transactions);
+  const recentTransactions = React.useMemo(
+    () => transactions.slice(0, 3),
+    [transactions],
+  );
 
   const registeredUids = React.useMemo(() => Object.keys(cards), [cards]);
 
@@ -587,6 +599,80 @@ export function TransitSimulator() {
             </Select>
             <div className="text-muted-foreground text-xs">
               Registered cards: {registeredUids.length}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Ticket Shop</CardTitle>
+          <CardDescription>
+            Issue a new NFC ticket-card (card is created with 80 PHP). Each
+            ticket costs 100 PHP; income (20 PHP) is split 60% DOTR / 40%
+            commission — commission further splits 60% VIP / 40% Gateron.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4 lg:grid-cols-2">
+          <div className="space-y-2 rounded-lg border p-3">
+            <div className="text-sm font-medium">Quantity</div>
+            <Input
+              type="number"
+              min="1"
+              value={ticketQuantity}
+              onChange={(event) => setTicketQuantity(event.target.value)}
+            />
+            <div className="flex flex-wrap gap-2">
+              <Button
+                onClick={() => {
+                  const qty = Number(ticketQuantity);
+                  if (!Number.isInteger(qty) || qty <= 0) {
+                    notifyError("Quantity must be a positive integer.");
+                    return;
+                  }
+
+                  const res = sellTickets(qty, now);
+                  if (!res.ok) {
+                    notifyError(res.reason);
+                    return;
+                  }
+
+                  const tx = res.tx;
+                  notifySuccess(
+                    `Sold ${qty} ticket(s) — total paid ${tx.paid} PHP.`,
+                  );
+                  notifyInfo(
+                    `Income ${tx.income} PHP split: DOTR ${tx.splits?.DOTR} PHP, Commission ${tx.splits?.COMMISSION} PHP (VIP ${tx.splits?.VIP} PHP, Gateron ${tx.splits?.GATERON} PHP)`,
+                  );
+                }}
+              >
+                Buy Tickets
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-2 rounded-lg border p-3">
+            <div className="text-sm font-medium">Recent Transactions</div>
+            <div className="text-xs text-muted-foreground">
+              Shows recent ticket sales (bulk sales are shown here).
+            </div>
+            <div className="mt-2 space-y-2">
+              {/** Show last 3 transactions */}
+              {recentTransactions.map((t) => (
+                <div key={t.id} className="rounded border p-2 text-sm">
+                  <div className="font-medium">{t.type}</div>
+                  <div className="text-muted-foreground text-xs">
+                    {new Date(t.at).toLocaleString()}
+                  </div>
+                  <div className="text-xs">Quantity: {t.quantity ?? 1}</div>
+                  <div className="text-xs">Paid: {t.paid} PHP</div>
+                  <div className="text-xs">Income: {t.income} PHP</div>
+                  <div className="text-xs">DOTR: {t.splits?.DOTR} PHP</div>
+                  <div className="text-xs">VIP: {t.splits?.VIP} PHP</div>
+                  <div className="text-xs">
+                    Gateron: {t.splits?.GATERON} PHP
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </CardContent>
