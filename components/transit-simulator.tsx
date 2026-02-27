@@ -90,6 +90,41 @@ export function TransitSimulator() {
     [transactions],
   );
 
+  const totals = React.useMemo(() => {
+    const round = (n: number) => Math.round(n * 100) / 100;
+    const res = recentTransactions.reduce(
+      (acc, t) => {
+        acc.paid += Number(t.paid ?? 0);
+        acc.income += Number(t.income ?? 0);
+        acc.quantity += Number(t.quantity ?? 1);
+        acc.DOTR += Number(t.splits?.DOTR ?? 0);
+        acc.COMMISSION += Number(t.splits?.COMMISSION ?? 0);
+        acc.VIP += Number(t.splits?.VIP ?? 0);
+        acc.GATERON += Number(t.splits?.GATERON ?? 0);
+        return acc;
+      },
+      {
+        paid: 0,
+        income: 0,
+        quantity: 0,
+        DOTR: 0,
+        COMMISSION: 0,
+        VIP: 0,
+        GATERON: 0,
+      },
+    );
+
+    return {
+      paid: round(res.paid),
+      income: round(res.income),
+      quantity: res.quantity,
+      DOTR: round(res.DOTR),
+      COMMISSION: round(res.COMMISSION),
+      VIP: round(res.VIP),
+      GATERON: round(res.GATERON),
+    };
+  }, [recentTransactions]);
+
   const registeredUids = React.useMemo(() => Object.keys(cards), [cards]);
 
   const notifySuccess = React.useCallback((text: string) => {
@@ -657,6 +692,19 @@ export function TransitSimulator() {
             </div>
             <div className="mt-2 space-y-2">
               {/** Show last 3 transactions */}
+              <div className="mb-2 rounded bg-muted p-2 text-sm">
+                <div className="font-medium">
+                  Totals (recent {recentTransactions.length})
+                </div>
+                <div className="text-xs">Total Paid: {totals.paid} PHP</div>
+                <div className="text-xs">Total Income: {totals.income} PHP</div>
+                <div className="text-xs">DOTR: {totals.DOTR} PHP</div>
+                <div className="text-xs">
+                  Commission: {totals.COMMISSION} PHP
+                </div>
+                <div className="text-xs">VIP: {totals.VIP} PHP</div>
+                <div className="text-xs">Gateron: {totals.GATERON} PHP</div>
+              </div>
               {recentTransactions.map((t) => (
                 <div key={t.id} className="rounded border p-2 text-sm">
                   <div className="font-medium">{t.type}</div>
