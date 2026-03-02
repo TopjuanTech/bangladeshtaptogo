@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-export function proxy(_request: NextRequest) {
+export function proxy(request: NextRequest) {
+  void request;
   return NextResponse.next();
 }
 import { getSessionCookie } from "better-auth/cookies";

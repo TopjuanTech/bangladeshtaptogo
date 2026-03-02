@@ -23,7 +23,7 @@ export type RegisteredTransaction = {
     VIP?: number;
     GATERON?: number;
   };
-  raw?: any;
+  raw?: unknown;
 };
 
 type CardRegistryState = {
@@ -32,6 +32,7 @@ type CardRegistryState = {
   registerCard: (
     uid: string,
     now: Date,
+    initialBalance?: number,
   ) => { ok: true } | { ok: false; reason: string };
   buyTicket: (
     uid: string,
@@ -62,7 +63,7 @@ export const useCardRegistryStore = create<CardRegistryState>((set, get) => ({
   cards: {},
   transactions: [],
 
-  registerCard: (uid, now) => {
+  registerCard: (uid, now, initialBalance) => {
     const normalizedUid = normalizeUid(uid);
 
     if (!normalizedUid) {
@@ -74,9 +75,19 @@ export const useCardRegistryStore = create<CardRegistryState>((set, get) => ({
       return { ok: false as const, reason: "Card is already registered." };
     }
 
+    const startingBalance = initialBalance ?? DEFAULT_ISSUE_BALANCE;
+
+    if (!Number.isFinite(startingBalance) || startingBalance < 0) {
+      return {
+        ok: false as const,
+        reason:
+          "Initial balance must be a valid number greater than or equal to 0.",
+      };
+    }
+
     const newCard = issueCard({
       id: normalizedUid,
-      initialBalance: DEFAULT_ISSUE_BALANCE,
+      initialBalance: startingBalance,
       issuedAt: now,
       validityDays: DEFAULT_VALIDITY_DAYS,
     });

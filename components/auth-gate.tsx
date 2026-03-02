@@ -4,7 +4,6 @@ import * as React from "react";
 import { useQuery } from "convex/react";
 import { toast } from "sonner";
 
-import { TransitSimulator } from "@/components/transit-simulator";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,7 +16,11 @@ import { Input } from "@/components/ui/input";
 import { api } from "@/convex/_generated/api";
 import { authClient } from "@/lib/auth-client";
 
-export function AuthGate() {
+type AuthGateProps = {
+  children: React.ReactNode;
+};
+
+export function AuthGate({ children }: AuthGateProps) {
   const { data: session, isPending: sessionPending } = authClient.useSession();
   const signUpEnabled = useQuery(api.auth.isSignUpEnabled, {});
 
@@ -95,18 +98,6 @@ export function AuthGate() {
     }
   };
 
-  const handleSignOut = async () => {
-    setSubmitting(true);
-    try {
-      await authClient.signOut();
-      toast.success("Signed out.");
-    } catch {
-      toast.error("Sign out failed.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   if (sessionPending || signUpEnabled === undefined) {
     return (
       <main className="mx-auto flex min-h-screen w-full max-w-3xl items-center justify-center p-4">
@@ -121,20 +112,7 @@ export function AuthGate() {
   }
 
   if (session?.user) {
-    return (
-      <>
-        <div className="mx-auto flex w-full max-w-6xl justify-end p-4 sm:p-6 lg:p-8">
-          <Button
-            variant="outline"
-            onClick={handleSignOut}
-            disabled={submitting}
-          >
-            Sign Out
-          </Button>
-        </div>
-        <TransitSimulator />
-      </>
-    );
+    return <>{children}</>;
   }
 
   return (
