@@ -85,7 +85,10 @@ export default function TopUpExpiryPage() {
           <CardDescription>Select a registered card to manage.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select value={selectedUid} onValueChange={setSelectedUid}>
+          <Select
+            value={selectedUid}
+            onValueChange={(value) => setSelectedUid(value ?? "")}
+          >
             <SelectTrigger className="w-full sm:w-[320px]">
               <SelectValue placeholder="Select card UID" />
             </SelectTrigger>
