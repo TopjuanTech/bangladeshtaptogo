@@ -8,19 +8,39 @@ import { createAuthMiddleware } from "better-auth/api";
 import { betterAuth } from "better-auth/minimal";
 import authConfig from "./auth.config";
 
-const siteUrl = process.env.SITE_URL!;
+function toOrigin(value?: string): string | null {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    return new URL(value).origin;
+  } catch {
+    return null;
+  }
+}
+
+const siteUrl =
+  toOrigin(process.env.SITE_URL) ??
+  toOrigin(process.env.NEXT_PUBLIC_SITE_URL) ??
+  "http://localhost:3000";
+
 const trustedOrigins = Array.from(
-  new Set([
-    siteUrl,
-    "http://localhost:3000",
-    "https://localhost:3000",
-    "http://127.0.0.1:3000",
-    "https://127.0.0.1:3000",
-    "http://localhost:3001",
-    "https://localhost:3001",
-    "https://taptoride.vercel.app",
-    "https://bangladeshtaptogo-815bs8l85-topjuan-tech.vercel.app",
-  ]),
+  new Set(
+    [
+      siteUrl,
+      process.env.SITE_URL,
+      process.env.NEXT_PUBLIC_SITE_URL,
+      "http://localhost:3000",
+      "https://localhost:3000",
+      "http://127.0.0.1:3000",
+      "https://192.168.0.102:3000",
+      "https://taptoride.vercel.app",
+      "https://bangladeshtaptogo-815bs8l85-topjuan-tech.vercel.app",
+    ]
+      .map((value) => toOrigin(value))
+      .filter((value): value is string => value !== null),
+  ),
 );
 
 // The component client has methods needed for integrating Convex with Better Auth,

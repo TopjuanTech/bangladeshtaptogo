@@ -1,29 +1,21 @@
 export const STATIONS = [
-  "Dr. Santos",
-  "Ninoy Aquino Avenue",
-  "PITX",
-  "MIA Road",
-  "Redemptorist - Aseana",
-  "Baclaran",
-  "EDSA",
-  "Libertad",
-  "Gil Puyat",
-  "Vito Cruz",
-  "Quirino",
-  "Pedro Gil",
-  "UN Avenue",
-  "Central",
-  "Carriedo",
-  "D. Jose",
-  "Bambang",
-  "Tayuman",
-  "Blumentritt",
-  "Abad Santos",
-  "R. Papa",
-  "5th Avenue",
-  "Monumento",
-  "Balintawak",
-  "Fernando Poe Jr.",
+  "Uttara North",
+  "Uttara Center",
+  "Uttara South",
+  "Pallabi",
+  "Mirpur 11",
+  "Mirpur 10",
+  "Kazipara",
+  "Shewrapara",
+  "Agargaon",
+  "Bijoy Sarani",
+  "Farmgate",
+  "Karwan Bazar",
+  "Shahbag",
+  "Dhaka University",
+  "Bangladesh Secretariat",
+  "Motijheel",
+  "Kamalapur",
 ] as const;
 
 export type Station = (typeof STATIONS)[number];
@@ -98,10 +90,49 @@ export type TransitCard = {
 
 export type FareMatrix = Record<Station, Record<Station, number>>;
 
-const LRT1_DISTANCE_FARE_PROFILE = [
-  16, 19, 20, 22, 23, 26, 27, 28, 29, 31, 32, 33, 34, 36, 37, 38, 39, 40, 41,
-  42, 43, 45, 46, 49, 52,
-] as const;
+const DHAKA_METRO_FARE_ROWS: Record<Station, readonly number[]> = {
+  "Uttara North": [
+    0, 18, 18, 27, 27, 36, 36, 45, 54, 54, 63, 72, 72, 81, 81, 90, 90,
+  ],
+  "Uttara Center": [
+    18, 0, 18, 18, 18, 18, 18, 27, 36, 36, 45, 54, 54, 63, 63, 72, 72,
+  ],
+  "Uttara South": [
+    18, 18, 0, 18, 18, 18, 18, 27, 36, 36, 45, 54, 54, 63, 63, 72, 72,
+  ],
+  Pallabi: [27, 18, 18, 0, 18, 18, 18, 18, 27, 27, 36, 45, 45, 54, 54, 63, 63],
+  "Mirpur 11": [
+    27, 18, 18, 18, 0, 18, 18, 18, 27, 27, 36, 45, 45, 54, 54, 63, 63,
+  ],
+  "Mirpur 10": [
+    36, 18, 18, 18, 18, 0, 18, 18, 18, 18, 27, 36, 36, 45, 45, 54, 54,
+  ],
+  Kazipara: [36, 18, 18, 18, 18, 18, 0, 18, 18, 18, 27, 36, 36, 45, 45, 54, 54],
+  Shewrapara: [
+    45, 27, 27, 18, 18, 18, 18, 0, 18, 18, 18, 27, 27, 36, 36, 45, 45,
+  ],
+  Agargaon: [54, 36, 36, 27, 27, 18, 18, 18, 0, 18, 18, 18, 18, 27, 27, 36, 36],
+  "Bijoy Sarani": [
+    54, 36, 36, 27, 27, 18, 18, 18, 18, 0, 18, 18, 18, 27, 27, 36, 36,
+  ],
+  Farmgate: [63, 45, 45, 36, 36, 27, 27, 18, 18, 18, 0, 18, 18, 18, 18, 27, 27],
+  "Karwan Bazar": [
+    72, 54, 54, 45, 45, 36, 36, 27, 18, 18, 18, 0, 18, 18, 18, 18, 18,
+  ],
+  Shahbag: [72, 54, 54, 45, 45, 36, 36, 27, 18, 18, 18, 18, 0, 18, 18, 18, 18],
+  "Dhaka University": [
+    81, 63, 63, 54, 54, 45, 45, 36, 27, 27, 18, 18, 18, 0, 18, 18, 18,
+  ],
+  "Bangladesh Secretariat": [
+    81, 63, 63, 54, 54, 45, 45, 36, 27, 27, 18, 18, 18, 18, 0, 18, 18,
+  ],
+  Motijheel: [
+    90, 72, 72, 63, 63, 54, 54, 45, 36, 36, 27, 18, 18, 18, 18, 0, 18,
+  ],
+  Kamalapur: [
+    90, 72, 72, 63, 63, 54, 54, 45, 36, 36, 27, 18, 18, 18, 18, 18, 0,
+  ],
+};
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
@@ -118,14 +149,8 @@ export function createFareMatrix(
     matrix[from] = {} as Record<Station, number>;
 
     for (const to of stations) {
-      const distance = Math.abs(
-        stationOrder.get(from)! - stationOrder.get(to)!,
-      );
-      const fareIndex = Math.min(
-        distance,
-        LRT1_DISTANCE_FARE_PROFILE.length - 1,
-      );
-      matrix[from][to] = LRT1_DISTANCE_FARE_PROFILE[fareIndex];
+      const toIndex = stationOrder.get(to)!;
+      matrix[from][to] = DHAKA_METRO_FARE_ROWS[from][toIndex];
     }
   }
 
@@ -241,7 +266,7 @@ export function tapInCard(
   card: TransitCard,
   station: Station,
   at: Date,
-  minimumFare = 16,
+  minimumFare = 18,
 ): TransitCard {
   ensureCardActive(card, at);
 
@@ -255,7 +280,7 @@ export function tapInCard(
   if (card.balance < minimumFare) {
     throw new TransitError(
       "INSUFFICIENT_BALANCE",
-      `Insufficient balance to tap in. Minimum required is ${minimumFare} PHP.`,
+      `Insufficient balance to tap in. Minimum required is ${minimumFare} BDT.`,
     );
   }
 
@@ -297,7 +322,7 @@ export function tapOutCard(
   if (card.balance < fare) {
     throw new TransitError(
       "INSUFFICIENT_BALANCE",
-      `Insufficient balance for fare ${fare} PHP. Please top up and tap out again.`,
+      `Insufficient balance for fare ${fare} BDT. Please top up and tap out again.`,
     );
   }
 

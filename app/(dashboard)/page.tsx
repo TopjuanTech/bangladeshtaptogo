@@ -53,7 +53,7 @@ export default function DashboardPage() {
         <MetricCard label="Registered Cards" value={`${cardList.length}`} />
         <MetricCard label="Active Trips" value={`${activeTrips}`} />
         <MetricCard label="Expired Cards" value={`${expiredCards}`} />
-        <MetricCard label="Total Income" value={`₱${totalIncome}`} />
+        <MetricCard label="Total Income" value={`৳${totalIncome}`} />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-5">
@@ -156,7 +156,7 @@ export default function DashboardPage() {
                       <td className="px-2 py-2">{tx.type}</td>
                       <td className="px-2 py-2">{tx.uid ?? "-"}</td>
                       <td className="px-2 py-2">
-                        ₱{Number(tx.income ?? 0).toFixed(2)}
+                        ৳{Number(tx.income ?? 0).toFixed(2)}
                       </td>
                     </tr>
                   ))}

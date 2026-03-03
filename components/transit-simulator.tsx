@@ -220,7 +220,7 @@ export function TransitSimulator() {
           <div className="rounded-lg border p-3">
             <div className="text-muted-foreground text-xs">Balance</div>
             <div className="font-medium">
-              {card ? `${card.balance.toFixed(2)} PHP` : "N/A"}
+              {card ? `৳${card.balance.toFixed(2)}` : "N/A"}
             </div>
           </div>
           <div className="rounded-lg border p-3">
@@ -327,38 +327,39 @@ export function TransitSimulator() {
         <CardHeader>
           <CardTitle>Sample Fare Checks</CardTitle>
           <CardDescription>
-            LRT-1 fare matrix from the configured schedule (minimum same-station
-            fare is 16 PHP).
+            Dhaka Metro fare matrix from the configured schedule (minimum travel
+            fare is 18 BDT).
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-5">
           <div>
-            Dr. Santos → Dr. Santos ={" "}
-            {getFare("Dr. Santos", "Dr. Santos", fareMatrix)} PHP
+            Uttara North → Uttara Center ={" "}
+            {getFare("Uttara North", "Uttara Center", fareMatrix)} BDT
           </div>
           <div>
-            Dr. Santos → Ninoy Aquino Avenue ={" "}
-            {getFare("Dr. Santos", "Ninoy Aquino Avenue", fareMatrix)} PHP
+            Uttara North → Mirpur 10 ={" "}
+            {getFare("Uttara North", "Mirpur 10", fareMatrix)} BDT
           </div>
           <div>
-            Dr. Santos → PITX = {getFare("Dr. Santos", "PITX", fareMatrix)} PHP
+            Uttara North → Farmgate ={" "}
+            {getFare("Uttara North", "Farmgate", fareMatrix)} BDT
           </div>
           <div>
-            Dr. Santos → Baclaran ={" "}
-            {getFare("Dr. Santos", "Baclaran", fareMatrix)} PHP
+            Uttara North → Motijheel ={" "}
+            {getFare("Uttara North", "Motijheel", fareMatrix)} BDT
           </div>
           <div>
-            Dr. Santos → Fernando Poe Jr. ={" "}
-            {getFare("Dr. Santos", "Fernando Poe Jr.", fareMatrix)} PHP
+            Farmgate → Kamalapur ={" "}
+            {getFare("Farmgate", "Kamalapur", fareMatrix)} BDT
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Fare Matrix (PHP)</CardTitle>
+          <CardTitle>Fare Matrix (BDT)</CardTitle>
           <CardDescription>
-            Auto-calculated using station distance.
+            Based on configured Dhaka Metro fare matrix.
           </CardDescription>
         </CardHeader>
         <CardContent className="overflow-auto">

@@ -44,7 +44,7 @@ export default function TopUpExpiryPage() {
       const amount = Number.parseFloat(topUpAmount);
       const next = topUpCard(currentCard, amount, new Date());
       updateCard(selectedUid, next);
-      toast.success(`Top-up successful: ₱${amount.toFixed(2)}.`);
+      toast.success(`Top-up successful: ৳${amount.toFixed(2)}.`);
     } catch (error) {
       if (error instanceof TransitError) {
         toast.error(error.message);
@@ -155,7 +155,7 @@ export default function TopUpExpiryPage() {
           ) : (
             <div className="grid gap-2 text-sm">
               <p>
-                <span className="font-medium">Balance:</span> ₱
+                <span className="font-medium">Balance:</span> ৳
                 {currentCard.balance.toFixed(2)}
               </p>
               <p>

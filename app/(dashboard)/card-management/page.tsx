@@ -134,7 +134,7 @@ export default function CardManagementPage() {
                       <tr key={record.uid} className="border-b last:border-b-0">
                         <td className="px-2 py-2 font-medium">{record.uid}</td>
                         <td className="px-2 py-2">
-                          ₱{record.card.balance.toFixed(2)}
+                          ৳{record.card.balance.toFixed(2)}
                         </td>
                         <td className="px-2 py-2">
                           {new Date(record.card.expiresAt).toLocaleDateString()}

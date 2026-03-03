@@ -13,7 +13,7 @@ export type RegisteredTransaction = {
   uid?: string | null;
   type: "TICKET_SALE" | "TOP_UP" | "TRIP_DEBIT" | string;
   at: Date;
-  paid?: number; // amount paid by customer (PHP)
+  paid?: number; // amount paid by customer (BDT)
   // cardBalance removed: do not store per-card balance in transactions
   income?: number; // total income (paid - cardBalance) per card
   quantity?: number; // for bulk sales

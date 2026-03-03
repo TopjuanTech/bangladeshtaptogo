@@ -80,8 +80,8 @@ export default function TransactionsPage() {
       }
     >
       <div className="grid gap-4 sm:grid-cols-3">
-        <MetricCard label="Total Paid" value={`₱${totals.paid}`} />
-        <MetricCard label="Total Income" value={`₱${totals.income}`} />
+        <MetricCard label="Total Paid" value={`৳${totals.paid}`} />
+        <MetricCard label="Total Income" value={`৳${totals.income}`} />
         <MetricCard label="Total Quantity" value={`${totals.quantity}`} />
       </div>
 
@@ -93,7 +93,7 @@ export default function TransactionsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-lg font-semibold">₱{totals.dotr}</p>
+            <p className="text-lg font-semibold">৳{totals.dotr}</p>
           </CardContent>
         </Card>
 
@@ -104,7 +104,7 @@ export default function TransactionsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-lg font-semibold">₱{totals.gateron}</p>
+            <p className="text-lg font-semibold">৳{totals.gateron}</p>
           </CardContent>
         </Card>
 
@@ -115,7 +115,7 @@ export default function TransactionsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-lg font-semibold">₱{totals.vip}</p>
+            <p className="text-lg font-semibold">৳{totals.vip}</p>
           </CardContent>
         </Card>
       </div>
@@ -154,19 +154,19 @@ export default function TransactionsPage() {
                       <td className="px-2 py-2">{tx.type}</td>
                       <td className="px-2 py-2">{tx.uid ?? "-"}</td>
                       <td className="px-2 py-2">
-                        ₱{Number(tx.paid ?? 0).toFixed(2)}
+                        ৳{Number(tx.paid ?? 0).toFixed(2)}
                       </td>
                       <td className="px-2 py-2">
-                        ₱{Number(tx.income ?? 0).toFixed(2)}
+                        ৳{Number(tx.income ?? 0).toFixed(2)}
                       </td>
                       <td className="px-2 py-2">
-                        ₱{Number(tx.splits?.DOTR ?? 0).toFixed(2)}
+                        ৳{Number(tx.splits?.DOTR ?? 0).toFixed(2)}
                       </td>
                       <td className="px-2 py-2">
-                        ₱{Number(tx.splits?.VIP ?? 0).toFixed(2)}
+                        ৳{Number(tx.splits?.VIP ?? 0).toFixed(2)}
                       </td>
                       <td className="px-2 py-2">
-                        ₱{Number(tx.splits?.GATERON ?? 0).toFixed(2)}
+                        ৳{Number(tx.splits?.GATERON ?? 0).toFixed(2)}
                       </td>
                     </tr>
                   ))}

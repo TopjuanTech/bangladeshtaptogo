@@ -137,15 +137,15 @@ export default function TicketShopPage() {
             <tbody>
               <tr className="border-b">
                 <td className="px-2 py-2">Customer Payment</td>
-                <td className="px-2 py-2">₱100.00</td>
+                <td className="px-2 py-2">৳100.00</td>
               </tr>
               <tr className="border-b">
                 <td className="px-2 py-2">Initial Card Balance</td>
-                <td className="px-2 py-2">₱80.00</td>
+                <td className="px-2 py-2">৳80.00</td>
               </tr>
               <tr>
                 <td className="px-2 py-2">Income Per Sale</td>
-                <td className="px-2 py-2">₱20.00</td>
+                <td className="px-2 py-2">৳20.00</td>
               </tr>
             </tbody>
           </table>
@@ -176,7 +176,7 @@ export default function TicketShopPage() {
                     {division.DOTR.percent}% of income
                   </td>
                   <td className="px-2 py-2">
-                    ₱{division.DOTR.amountPerTicket.toFixed(2)}
+                    ৳{division.DOTR.amountPerTicket.toFixed(2)}
                   </td>
                 </tr>
                 <tr className="border-b">
@@ -185,7 +185,7 @@ export default function TicketShopPage() {
                     {division.COMMISSION.percent}% of income
                   </td>
                   <td className="px-2 py-2">
-                    ₱{division.COMMISSION.amountPerTicket.toFixed(2)}
+                    ৳{division.COMMISSION.amountPerTicket.toFixed(2)}
                   </td>
                 </tr>
                 <tr className="border-b">
@@ -194,7 +194,7 @@ export default function TicketShopPage() {
                     {division.COMMISSION.VIPPercentOfCommission}% of commission
                   </td>
                   <td className="px-2 py-2">
-                    ₱{division.COMMISSION.VIPAmountPerTicket.toFixed(2)}
+                    ৳{division.COMMISSION.VIPAmountPerTicket.toFixed(2)}
                   </td>
                 </tr>
                 <tr>
@@ -204,7 +204,7 @@ export default function TicketShopPage() {
                     commission
                   </td>
                   <td className="px-2 py-2">
-                    ₱{division.COMMISSION.GateronAmountPerTicket.toFixed(2)}
+                    ৳{division.COMMISSION.GateronAmountPerTicket.toFixed(2)}
                   </td>
                 </tr>
               </tbody>
@@ -214,15 +214,15 @@ export default function TicketShopPage() {
           <div className="rounded-md border p-3 text-sm">
             <div className="font-medium">Reference</div>
             <p className="text-muted-foreground mt-1">
-              Income basis is ₱{incomePerTicket.toFixed(2)} per ticket (₱100
-              paid - ₱80 card value).
+              Income basis is ৳{incomePerTicket.toFixed(2)} per ticket (৳100
+              paid - ৳80 card value).
             </p>
             {latestSale ? (
               <p className="text-muted-foreground mt-2">
-                Latest sale split: DOTR ₱
-                {Number(latestSale.splits?.DOTR ?? 0).toFixed(2)} · Commission ₱
-                {Number(latestSale.splits?.COMMISSION ?? 0).toFixed(2)} · VIP ₱
-                {Number(latestSale.splits?.VIP ?? 0).toFixed(2)} · Gateron ₱
+                Latest sale split: DOTR ৳
+                {Number(latestSale.splits?.DOTR ?? 0).toFixed(2)} · Commission ৳
+                {Number(latestSale.splits?.COMMISSION ?? 0).toFixed(2)} · VIP ৳
+                {Number(latestSale.splits?.VIP ?? 0).toFixed(2)} · Gateron ৳
                 {Number(latestSale.splits?.GATERON ?? 0).toFixed(2)}
               </p>
             ) : null}
@@ -238,7 +238,7 @@ export default function TicketShopPage() {
           {latestSale ? (
             <p className="text-sm">
               {new Date(latestSale.at).toLocaleString()} · UID:{" "}
-              {latestSale.uid ?? "N/A"} · Income: ₱
+              {latestSale.uid ?? "N/A"} · Income: ৳
               {Number(latestSale.income ?? 0).toFixed(2)}
             </p>
           ) : (
