@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { PageShell } from "@/components/dashboard/page-shell";
@@ -23,16 +23,80 @@ import {
 import { useCardRegistryStore } from "@/lib/card-registry-store";
 import { TransitError, extendCardExpiry, topUpCard } from "@/lib/nfc-transit";
 
+function normalizeCardUid(uid: string): string {
+  return uid.trim().toUpperCase();
+}
+
 export default function TopUpExpiryPage() {
   const [selectedUid, setSelectedUid] = useState("");
   const [topUpAmount, setTopUpAmount] = useState("100");
   const [extendDays, setExtendDays] = useState("30");
+  const scanBufferRef = useRef("");
+  const scanTimerRef = useRef<number | null>(null);
 
   const cards = useCardRegistryStore((state) => state.cards);
   const updateCard = useCardRegistryStore((state) => state.updateCard);
 
   const cardList = useMemo(() => Object.values(cards), [cards]);
   const currentCard = selectedUid ? cards[selectedUid]?.card : undefined;
+
+  useEffect(() => {
+    const resetBuffer = () => {
+      if (scanTimerRef.current) {
+        window.clearTimeout(scanTimerRef.current);
+      }
+
+      scanTimerRef.current = window.setTimeout(() => {
+        scanBufferRef.current = "";
+      }, 120);
+    };
+
+    const handleKeydown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const tag = target?.tagName?.toLowerCase();
+      const isTypingField =
+        tag === "input" ||
+        tag === "textarea" ||
+        tag === "select" ||
+        target?.isContentEditable;
+
+      if (isTypingField) {
+        return;
+      }
+
+      if (event.key === "Enter") {
+        const scannedUid = normalizeCardUid(scanBufferRef.current);
+        if (!scannedUid) {
+          return;
+        }
+
+        event.preventDefault();
+        scanBufferRef.current = "";
+
+        if (!cards[scannedUid]) {
+          toast.error(`Card ${scannedUid} is not registered.`);
+          return;
+        }
+
+        setSelectedUid(scannedUid);
+        return;
+      }
+
+      if (/^[a-zA-Z0-9-]$/.test(event.key)) {
+        scanBufferRef.current += event.key;
+        resetBuffer();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeydown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeydown);
+      if (scanTimerRef.current) {
+        window.clearTimeout(scanTimerRef.current);
+      }
+    };
+  }, [cards]);
 
   const handleTopUp = () => {
     if (!currentCard) {
